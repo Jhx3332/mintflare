@@ -1,0 +1,196 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Шрифт как в оригинальном билде — Euclid Circular A (self-hosted). */
+@font-face {
+  font-family: "EuclidCircular";
+  src: url("/fonts/EuclidCircular/EuclidCircularA-Regular.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "EuclidCircular";
+  src: url("/fonts/EuclidCircular/EuclidCircularA-Medium.woff2") format("woff2");
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "EuclidCircular";
+  src: url("/fonts/EuclidCircular/EuclidCircularA-Semibold.woff2") format("woff2");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* Бирюзовая тема — мягкий современный тёмный. Меняешь оттенок здесь — меняется весь сайт. */
+:root {
+  --background: #0d1517; /* фон */
+  --foreground: #e4edec; /* текст */
+  --surface: #131f22; /* карточки/поверхности */
+  --surface-2: #1c2b30; /* инпуты/приподнятые поверхности */
+  --border: #21343b; /* границы (мягкие, прохладные) */
+  --accent: #14b8a6; /* акцент: кнопки, активные состояния */
+  --accent-hover: #0d9488; /* hover акцента */
+  --accent-bright: #2dd4bf; /* яркий акцент: лого, хайлайты */
+  --accent-soft: #5eead4; /* светлый акцент: мелкий текст */
+}
+
+/* Крупнее и дружелюбнее — как Chrome на 110%. Tailwind считает в rem, поэтому
+   один корневой font-size масштабирует текст/отступы/размеры на 10% по всему сайту. */
+html {
+  font-size: 110%;
+}
+
+body {
+  color: var(--foreground);
+  background: var(--background);
+  font-family: EuclidCircular, Helvetica, sans-serif;
+  font-weight: 400;
+}
+
+/* Кнопка-триггер подключения кошелька (в шапке) — сплошная бирюза. */
+.wallet-adapter-button-trigger {
+  background-color: var(--accent) !important;
+  border-radius: 12px !important;
+  font-weight: 700 !important;
+  font-family: EuclidCircular, Helvetica, sans-serif;
+  font-size: 14px;
+  color: #fff;
+  transition: background-color 0.15s ease, transform 0.15s ease, box-shadow 0.15s ease;
+}
+.wallet-adapter-button-trigger:not([disabled]):hover {
+  background-color: var(--accent-hover) !important;
+  transform: translateY(-1px);
+  box-shadow: 0 6px 18px -6px rgba(20, 184, 166, 0.5);
+}
+
+/* Модалка выбора кошелька — под тему (панель, заголовок, список). */
+.wallet-adapter-modal-wrapper {
+  background: var(--surface) !important;
+  border: 1px solid var(--border);
+  border-radius: 20px !important;
+  font-family: EuclidCircular, Helvetica, sans-serif;
+}
+.wallet-adapter-modal-title {
+  color: var(--foreground) !important;
+  font-family: EuclidCircular, Helvetica, sans-serif;
+}
+.wallet-adapter-modal-button-close {
+  background: var(--surface-2) !important;
+  border-radius: 9999px !important;
+  transition: background-color 0.15s ease;
+}
+.wallet-adapter-modal-button-close:hover {
+  background: var(--border) !important;
+}
+/* Пункты списка кошельков — приглушённая поверхность, бирюзовый hover. */
+.wallet-adapter-modal-list .wallet-adapter-button {
+  background-color: var(--surface-2) !important;
+  color: var(--foreground) !important;
+  border-radius: 14px !important;
+  font-family: EuclidCircular, Helvetica, sans-serif;
+  font-weight: 600 !important;
+  transition: background-color 0.15s ease, color 0.15s ease, transform 0.15s ease;
+}
+.wallet-adapter-modal-list .wallet-adapter-button:not([disabled]):hover {
+  background-color: var(--accent) !important;
+  color: #fff !important;
+  transform: translateY(-1px);
+}
+.wallet-adapter-modal-list .wallet-adapter-button .wallet-adapter-button-end-icon {
+  opacity: 0.6;
+}
+
+.animate-fadeIn {
+  animation: fadeIn 0.2s ease-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Лёгкие анимации по сайту: мягкий вход и hover-подъём. */
+.animate-fadeInUp {
+  animation: fadeInUp 0.5s ease-out both;
+}
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.hover-lift {
+  transition:
+    transform 0.18s ease,
+    box-shadow 0.18s ease,
+    border-color 0.18s ease;
+  will-change: transform;
+}
+.hover-lift:hover {
+  transform: translateY(-2px);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-fadeInUp,
+  .animate-fadeIn,
+  .dex-boost-active {
+    animation: none !important;
+  }
+  .hover-lift:hover {
+    transform: none;
+  }
+}
+
+/* Плавное раскрытие полей Creator (grid 0fr→1fr) — анимируется только height+opacity,
+   без layout-тяжёлых свойств, чтобы не лагало в Chrome. */
+.creator-expand {
+  display: grid;
+  grid-template-rows: 0fr;
+  opacity: 0;
+  transition:
+    grid-template-rows 0.3s ease-out,
+    opacity 0.3s ease-out;
+}
+.creator-expand.open {
+  grid-template-rows: 1fr;
+  opacity: 1;
+}
+.creator-expand > .creator-expand-inner {
+  overflow: hidden;
+}
+
+/* Перелив + свечение активного Dexscreener Boost — в фирменной бирюзе. */
+.dex-boost-active {
+  background-image: linear-gradient(
+    110deg,
+    var(--surface) 30%,
+    rgba(20, 184, 166, 0.32) 50%,
+    var(--surface) 70%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 3.5s linear infinite;
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
